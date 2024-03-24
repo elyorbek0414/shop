@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Mahsulot, Buyurtma
+from .models import Mahsulot, Buyurtma, Chegirma
 
 
 class MahsulotSerializer(serializers.ModelSerializer):
@@ -11,4 +11,10 @@ class MahsulotSerializer(serializers.ModelSerializer):
 class BuyurtmaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Buyurtma
+        fields = '__all__'
+
+
+class chegirmaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chegirma
         fields = '__all__'

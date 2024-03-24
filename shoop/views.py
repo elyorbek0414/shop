@@ -21,27 +21,27 @@ class MahsulotListCreate(APIView):
 
 
 class MahsulotRetrieveUpdateDestroy(APIView):
-    def get_object(self, pk):
+    def get_object(self, poc):
         try:
-            return Mahsulot.objects.get(pk=pk)
+            return Mahsulot.objects.get(poc=poc)
         except Mahsulot.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            raise Http404
 
-    def get(self, request, pk):
-        mahsulot = self.get_object(pk)
+    def get(self, request, poc):
+        mahsulot = self.get_object(poc)
         serializer = MahsulotSerializer(mahsulot)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        mahsulot = self.get_object(pk)
+    def put(self, request, poc):
+        mahsulot = self.get_object(poc)
         serializer = MahsulotSerializer(mahsulot, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        mahsulot = self.get_object(pk)
+    def delete(self, request, poc):
+        mahsulot = self.get_object(poc)
         mahsulot.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -54,17 +54,17 @@ class ChegirmaListCreate(APIView):
 
 
 class BuyurtmaListCreate(APIView):
-    def get(self, request):
-        buyurtmalar = Buyurtma.objects.all()
-        serializer = BuyurtmaSerializer(buyurtmalar, many=True)
-        return Response(serializer.data)
-
     def post(self, request):
         data = request.data
         mahsulot_id = data.get('mahsulot')
         miqdori = data.get('miqdori')
+
         if mahsulot_id:
-            mahsulot = Mahsulot.objects.get(pk=mahsulot_id)
+            try:
+                mahsulot = Mahsulot.objects.get(poc=mahsulot_id)
+            except Mahsulot.DoesNotExist:
+                return Response({"error": "Mahsulot not found"}, status=status.HTTP_404_NOT_FOUND)
+
             chegirma_foizi = mahsulot.chegirma_foizi
             chegirma_muddati = mahsulot.chegirma_muddati
         else:
@@ -83,8 +83,6 @@ class BuyurtmaListCreate(APIView):
         if chegirma:
             chegirma_miqdori = chegirma.chegirma_foizi * summa / 100
             summa -= chegirma_miqdori
-        else:
-            summa
 
         buyurtma = Buyurtma.objects.create(
             mahsulot=mahsulot,
@@ -92,7 +90,7 @@ class BuyurtmaListCreate(APIView):
             chegirma_foizi=chegirma_foizi,
             chegirma_muddati=chegirma_muddati,
             summa=summa,
-            qabul_sana=data.get('qabul_sana')
+            qabul_sana=data.get('get_data')
         )
 
         serializer = BuyurtmaSerializer(buyurtma)
@@ -100,26 +98,26 @@ class BuyurtmaListCreate(APIView):
 
 
 class BuyurtmaDetail(APIView):
-    def get_object(self, pk):
+    def get_object(self, poc):
         try:
-            return Buyurtma.objects.get(pk=pk)
+            return Buyurtma.objects.get(poc=poc)
         except Buyurtma.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk):
-        buyurtma = self.get_object(pk)
+    def get(self, request, poc):
+        buyurtma = self.get_object(poc)
         serializer = BuyurtmaSerializer(buyurtma)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        buyurtma = self.get_object(pk)
+    def put(self, request, poc):
+        buyurtma = self.get_object(poc)
         serializer = BuyurtmaSerializer(buyurtma, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        buyurtma = self.get_object(pk)
+    def delete(self, request, poc):
+        buyurtma = self.get_object(poc)
         buyurtma.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
