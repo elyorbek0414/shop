@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('chegirma_foizi', models.DecimalField(decimal_places=2, max_digits=5)),
                 ('chegirma_muddati', models.DateField()),
-                ('mahsulot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.mahsulot')),
+                ('mahsulot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shoop.mahsulot')),
             ],
         ),
         migrations.CreateModel(
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ('chegirma_muddati', models.DateField(blank=True)),
                 ('summa', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('qabul_sana', models.DateField()),
-                ('mahsulot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.mahsulot')),
+                ('mahsulot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='shoop.mahsulot')),
             ],
         ),
     ]
